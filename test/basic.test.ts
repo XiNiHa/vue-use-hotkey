@@ -59,6 +59,36 @@ test('hotkey gets removed when component unmounts', async () => {
   await fireEvent.keyUp(container, { key: 'b' })
 })
 
+test('removing hotkey with returned function works', async () => {
+  let triggered = false
+
+  const { container } = render({
+    template: '<div></div>',
+    setup () {
+      const [removeHotkey] = useHotkey([
+        {
+          keys: ['Control', 'b'],
+          handler () {
+            triggered = true
+          }
+        }
+      ])
+
+      removeHotkey()
+    }
+  })
+
+  expect(triggered).toBeFalsy()
+
+  await fireEvent.keyDown(container, { key: 'Control' })
+  await fireEvent.keyDown(container, { key: 'b' })
+
+  expect(triggered).toBeFalsy()
+
+  await fireEvent.keyUp(container, { key: 'Control' })
+  await fireEvent.keyUp(container, { key: 'b' })
+})
+
 test('setting exact to true works', async () => {
   let triggered = false
 

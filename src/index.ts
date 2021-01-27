@@ -9,9 +9,12 @@ const manager = new HotkeyManager()
  * Hotkeys are automatically removed when the component gets unmounted.
  *
  * @param hotkeys Hotkeys to register.
+ * @returns Array of functions for removing corresponding hotkeys.
  */
-export function useHotkey (hotkeys: Hotkey[]): void {
+export function useHotkey (hotkeys: Hotkey[]): Array<() => void> {
   hotkeys.forEach(hk => manager.registerHotkey(hk))
 
   onUnmounted(() => hotkeys.forEach(hk => manager.removeHotkey(hk)))
+
+  return hotkeys.map(hk => () => { manager.removeHotkey(hk) })
 }
