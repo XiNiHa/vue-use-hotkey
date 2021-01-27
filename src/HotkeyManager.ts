@@ -3,18 +3,22 @@ import { Hotkey } from './types'
 export class HotkeyManager {
   readonly registeredHotkeys: Hotkey[] = []
 
-  readonly pressedKeys = new Set<string>()
+  readonly pressedKeys = new Map<string, boolean>()
 
   constructor () {
     window.addEventListener('keydown', e => {
-      this.pressedKeys.add(e.key)
+      this.pressedKeys.set(e.key, e.repeat)
 
       this.registeredHotkeys.forEach(hotkey => {
         if ((hotkey.exact == null || !hotkey.exact) || hotkey.keys.length === this.pressedKeys.size) {
-          if (hotkey.keys.reduce((result, key) => result && this.pressedKeys.has(key), true)) {
-            if (hotkey.preventDefault != null && hotkey.preventDefault) e.preventDefault()
+          if (hotkey.keys.reduce((result, key) =>
+            result &&
+            this.pressedKeys.has(key) &&
+            (hotkey.repeat === true || !(this.pressedKeys.get(key) ?? true)),
+          true)) {
+            if (hotkey.preventDefault === true) e.preventDefault()
 
-            hotkey.handler([...this.pressedKeys])
+            hotkey.handler([...this.pressedKeys.keys()])
           }
         }
       })
