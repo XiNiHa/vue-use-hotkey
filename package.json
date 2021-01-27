@@ -1,6 +1,6 @@
 {
   "name": "vue-use-hotkey",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hotkey Hooks for Vue 2/3",
   "author": "XiNiHa <anesin1109@naver.com>",
   "main": "dist/cjs/index.js",
