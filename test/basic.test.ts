@@ -29,6 +29,36 @@ test('hotkey works', async () => {
   await fireEvent.keyUp(container, { key: 'b' })
 })
 
+test('hotkey gets removed when component unmounts', async () => {
+  let triggered = false
+
+  const { container, unmount } = render({
+    template: '<div></div>',
+    setup () {
+      useHotkey([
+        {
+          keys: ['Control', 'b'],
+          handler () {
+            triggered = true
+          }
+        }
+      ])
+    }
+  })
+
+  expect(triggered).toBeFalsy()
+
+  unmount()
+
+  await fireEvent.keyDown(container, { key: 'Control' })
+  await fireEvent.keyDown(container, { key: 'b' })
+
+  expect(triggered).toBeFalsy()
+
+  await fireEvent.keyUp(container, { key: 'Control' })
+  await fireEvent.keyUp(container, { key: 'b' })
+})
+
 test('setting exact to true works', async () => {
   let triggered = false
 
