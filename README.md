@@ -2,6 +2,13 @@
 
 Hotkey hooks for Vue 2/3.
 
+## Installation
+
+```sh
+npm install vue-use-hotkey # Using NPM
+yarn add vue-use-hotkey # Using yarn
+```
+
 ## Usage
 
 ```js
