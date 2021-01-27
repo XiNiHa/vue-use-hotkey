@@ -3,6 +3,7 @@
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "strictNullChecks": true,
+    "esModuleInterop": true,
     "target": "ES2016",
     "outDir": "dist",
     "rootDir": "./src",
