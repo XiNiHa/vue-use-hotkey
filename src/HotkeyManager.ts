@@ -12,7 +12,7 @@ export class HotkeyManager {
       this.registeredHotkeys.forEach(hotkey => {
         if ((hotkey.exact == null || !hotkey.exact) || hotkey.keys.length === this.pressedKeys.size) {
           if (hotkey.keys.reduce((result, key) => result && this.pressedKeys.has(key), true)) {
-            if (hotkey.preventDefault) e.preventDefault()
+            if (hotkey.preventDefault != null && hotkey.preventDefault) e.preventDefault()
 
             hotkey.handler([...this.pressedKeys])
           }

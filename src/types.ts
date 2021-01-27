@@ -5,7 +5,7 @@
  */
 export interface Hotkey {
   keys: string[]
-  preventDefault: boolean
+  preventDefault?: boolean
   exact?: boolean
   handler: (keys: string[]) => any
 }
