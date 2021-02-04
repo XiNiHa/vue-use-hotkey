@@ -1,7 +1,7 @@
 import { Hotkey } from './types'
 
 export class HotkeyManager {
-  readonly registeredHotkeys: Hotkey[] = []
+  readonly registeredHotkeys: Record<string, Hotkey[]> = {}
 
   readonly pressedKeys = new Map<string, boolean>()
 
@@ -9,17 +9,12 @@ export class HotkeyManager {
     window.addEventListener('keydown', e => {
       this.pressedKeys.set(e.key, e.repeat)
 
-      this.registeredHotkeys.forEach(hotkey => {
-        if ((hotkey.exact == null || !hotkey.exact) || hotkey.keys.length === this.pressedKeys.size) {
-          if (hotkey.keys.reduce((result, key) =>
-            result &&
-            this.pressedKeys.has(key) &&
-            (hotkey.repeat === true || !(this.pressedKeys.get(key) ?? true)),
-          true)) {
-            if (hotkey.preventDefault === true) e.preventDefault()
+      const keyComb = this.getKeyComb(Array.from(this.pressedKeys.keys()))
+      this.registeredHotkeys[keyComb]?.forEach(hotkey => {
+        if (!e.repeat || hotkey.repeat) {
+          if (hotkey.preventDefault) e.preventDefault()
 
-            hotkey.handler([...this.pressedKeys.keys()])
-          }
+          hotkey.handler([...this.pressedKeys.keys()])
         }
       })
     })
@@ -30,15 +25,24 @@ export class HotkeyManager {
     })
   }
 
+  getKeyComb (keys: string[]) {
+    return keys.sort().join(' ')
+  }
+
   registerHotkey (hotkey: Hotkey): void {
-    this.registeredHotkeys.push(hotkey)
+    const keyComb = this.getKeyComb([...hotkey.keys])
+    if (!this.registeredHotkeys[keyComb]) {
+      this.registeredHotkeys[keyComb] = []
+    }
+    this.registeredHotkeys[keyComb].push(hotkey)
   }
 
   removeHotkey (hotkey: Hotkey): boolean {
-    const index = this.registeredHotkeys.indexOf(hotkey)
+    const keyComb = this.getKeyComb([...hotkey.keys])
+    const index = this.registeredHotkeys[keyComb]?.indexOf(hotkey) ?? -1
 
     if (index !== -1) {
-      this.registeredHotkeys.splice(index, 1)
+      this.registeredHotkeys[keyComb].splice(index, 1)
       return true
     }
     return false

@@ -16,10 +16,6 @@ export interface Hotkey {
    */
   preventDefault?: boolean
   /**
-   * If set to `true`, the hotkey gets triggered only when the pressed keys matches exactly with the keys set.
-   */
-  exact?: boolean
-  /**
    * If set to `true`, the hotkey gets triggered with repeated(holding the key) inputs.
    */
   repeat?: boolean
