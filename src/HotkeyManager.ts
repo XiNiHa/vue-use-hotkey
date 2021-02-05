@@ -25,7 +25,7 @@ export class HotkeyManager {
     })
   }
 
-  getKeyComb (keys: string[]) {
+  getKeyComb (keys: string[]): string {
     return keys.sort().join(' ')
   }
 
